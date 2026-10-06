@@ -30,6 +30,12 @@ with `paths`, so it imports those descriptors without generating duplicate Go
 registrations. Its sibling client contracts belong in another declared input,
 so replacing the generated output also recreates their bindings.
 
+Dependency client bindings live under the Go module's `external/` directory.
+Sync regenerates declared gRPC dependencies and removes marked generated Go
+files left by retired dependencies. It preserves handwritten files and does not
+follow symlinks. Retirements use the same staged transaction as generation:
+dry-run reports them, and a failed generation applies no deletions.
+
 When refreshing a marked single-service scaffold, the agent reads `go_package`
 from the proto that declares that service. Listener imports follow its import
 path and package name, including versioned packages; they do not revert to the

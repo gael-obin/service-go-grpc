@@ -237,6 +237,10 @@ func (s *Builder) Sync(ctx context.Context, request *builderv0.SyncRequest) (*bu
 		}
 	}
 
+	if err := trackRetiredDependencyBindings(transaction, moduleRoot); err != nil {
+		return s.Base.Builder.SyncError(err)
+	}
+
 	// protoc-gen-grpc-gateway emits `pkg.RequestType` for request types declared
 	// in another proto package but omits the import, so the generated .pb.gw.go
 	// does not compile. goimports below cannot repair it: its candidate scan keys
